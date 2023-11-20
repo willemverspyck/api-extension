@@ -24,7 +24,7 @@ final class ResponseService
     {
     }
 
-    public function getResponse(QueryBuilder $queryBuilder, MapInterface $requestList, ConfigInterface $config): Response
+    public function getResponse(QueryBuilder $queryBuilder, MapInterface $requestList, ConfigInterface $config = null): Response
     {
         $paginate = $this->paginator->paginate($queryBuilder, $requestList->getPage(), $requestList->getPageSize());
 

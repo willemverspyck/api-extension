@@ -11,7 +11,7 @@ final class Response
     public const GROUP = 'spyck:api:extension';
 
     #[Serializer\Groups(groups: self::GROUP)]
-    private ConfigInterface $config;
+    private ?ConfigInterface $config = null;
 
     #[Serializer\Groups(groups: self::GROUP)]
     private iterable $data;
@@ -22,12 +22,12 @@ final class Response
     #[Serializer\Groups(groups: self::GROUP)]
     private ?Pagination $pagination = null;
 
-    public function getConfig(): ConfigInterface
+    public function getConfig(): ?ConfigInterface
     {
         return $this->config;
     }
 
-    public function setConfig(ConfigInterface $config): static
+    public function setConfig(?ConfigInterface $config): static
     {
         $this->config = $config;
 
