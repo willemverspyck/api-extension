@@ -22,7 +22,6 @@
         "doctrine/orm": "^2|^3",
         "knplabs/knp-paginator-bundle": "^6",
         "symfony/dependency-injection": "^6|^7",
-        "symfony/framework-bundle": "^6|^7",
         "symfony/http-foundation": "^6|^7",
         "symfony/http-kernel": "^6|^7",
         "symfony/routing": "^6|^7",

@@ -9,7 +9,7 @@ use Symfony\Component\Validator\Constraints as Validator;
 
 trait QueryMapTrait
 {
-    #[OpenApi\QueryParameter(name: 'query', description: 'Query to search for')]
+    #[OpenApi\QueryParameter(name: 'query', description: 'Query as filter')]
     #[Validator\Type(type: 'string')]
     private ?string $query = null;
 

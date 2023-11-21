@@ -9,7 +9,7 @@ use Symfony\Component\Serializer\Annotation as Serializer;
 use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
 use Symfony\Component\Validator\Constraints as Validator;
 
-final class TimestampMap
+final class Timestamp
 {
     #[OpenApi\QueryParameter(name: 'start', description: 'Timestamp before specified date')]
     #[Serializer\Context(denormalizationContext: [DateTimeNormalizer::FORMAT_KEY => 'Y-m-d'])]

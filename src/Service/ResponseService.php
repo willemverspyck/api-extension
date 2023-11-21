@@ -5,32 +5,64 @@ declare(strict_types=1);
 namespace Spyck\ApiExtension\Service;
 
 use Doctrine\ORM\QueryBuilder;
-use Knp\Component\Pager\Pagination\PaginationInterface;
+use Knp\Bundle\PaginatorBundle\Pagination\SlidingPaginationInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Spyck\ApiExtension\Map\MapInterface;
+use Spyck\ApiExtension\Map\PaginationMapInterface;
 use Spyck\ApiExtension\Model\ConfigInterface;
 use Spyck\ApiExtension\Model\Pagination;
 use Spyck\ApiExtension\Model\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\Response as HttpFoundationResponse;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Serializer\Encoder\JsonEncode;
+use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
+use Symfony\Component\Serializer\SerializerInterface;
 
 final class ResponseService
 {
     private const PREVIOUS = 'previous';
     private const NEXT = 'next';
 
-    public function __construct(private readonly PaginatorInterface $paginator, private readonly RequestStack $requestStack, private readonly RouterInterface $router)
+    public function __construct(private readonly PaginatorInterface $paginator, private readonly RequestStack $requestStack, private readonly RouterInterface $router, private readonly SerializerInterface $serializer)
     {
     }
 
-    public function getResponse(QueryBuilder $queryBuilder, MapInterface $requestList, ConfigInterface $config = null): Response
+    public function getResponseForItem(object $data = null, array $groups = []): JsonResponse
     {
-        $paginate = $this->paginator->paginate($queryBuilder, $requestList->getPage(), $requestList->getPageSize());
+        if (null === $data) {
+            $error = 'Not found';
 
-        $pagination = new Pagination();
-        $pagination->setNext($this->getPage($paginate, self::NEXT));
-        $pagination->setPrevious($this->getPage($paginate, self::PREVIOUS));
+            return new JsonResponse(data: $error, status: HttpFoundationResponse::HTTP_NOT_FOUND);
+        }
+
+        $data = $this->serializer->serialize(data: $data, format: 'json', context: $this->getContext($groups));
+
+        return new JsonResponse(data: $data, json: true);
+    }
+
+    public function getResponseForList(array|QueryBuilder $data, MapInterface $map = null, ConfigInterface $config = null, array $groups = []): JsonResponse
+    {
+        $response = $this->getResponse($data, $map, $config);
+
+        return new JsonResponse(data: $this->serializer->serialize($response, 'json', $this->getContext($groups)), json: true);
+    }
+
+    private function getResponse(array|QueryBuilder $data, MapInterface $map = null, ConfigInterface $config = null): Response
+    {
+        $pagination = null;
+
+        if ($map instanceof PaginationMapInterface) {
+            $paginate = $this->paginator->paginate($data, $map->getPage(), $map->getPageSize());
+
+            $pagination = new Pagination();
+            $pagination->setNext($this->getPage($paginate, self::NEXT));
+            $pagination->setPrevious($this->getPage($paginate, self::PREVIOUS));
+        } else {
+            $paginate = $this->paginator->paginate($data);
+        }
 
         $response = new Response();
         $response->setConfig($config);
@@ -41,7 +73,7 @@ final class ResponseService
         return $response;
     }
 
-    private function getPage(PaginationInterface $pagination, string $name): ?string
+    private function getPage(SlidingPaginationInterface $pagination, string $name): ?string
     {
         $data = $pagination->getPaginationData();
 
@@ -57,5 +89,15 @@ final class ResponseService
         }
 
         return null;
+    }
+
+    private function getContext(array $groups): array
+    {
+        $groups[] = Response::GROUP;
+
+        return [
+            AbstractNormalizer::GROUPS => $groups,
+            JsonEncode::OPTIONS => JsonResponse::DEFAULT_ENCODING_OPTIONS,
+        ];
     }
 }
