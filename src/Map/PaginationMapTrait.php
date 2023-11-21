@@ -7,7 +7,7 @@ namespace Spyck\ApiExtension\Map;
 use OpenApi\Attributes as OpenApi;
 use Symfony\Component\Validator\Constraints as Validator;
 
-abstract class PaginationMap extends AbstractMap implements PaginationMapInterface
+trait PaginationMapTrait
 {
     #[OpenApi\QueryParameter(name: 'page', description: 'Page for pagination')]
     #[Validator\Range(minMessage: 'This value should be greater or equal to 1', min: 1)]
