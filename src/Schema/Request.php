@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Schema;
+namespace Spyck\ApiExtension\Schema;
 
 use Attribute;
 use Nelmio\ApiDocBundle\Annotation\Model;
