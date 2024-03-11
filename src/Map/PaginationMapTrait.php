@@ -22,7 +22,7 @@ trait PaginationMapTrait
         return $this->page;
     }
 
-    public function setPage(int $page): static
+    public function setPage(int $page): self
     {
         $this->page = $page;
 
@@ -34,7 +34,7 @@ trait PaginationMapTrait
         return $this->pageSize;
     }
 
-    public function setPageSize(int $pageSize): static
+    public function setPageSize(int $pageSize): self
     {
         $this->pageSize = $pageSize;
 
