@@ -13,7 +13,7 @@ use Symfony\Component\HttpFoundation\Response as HttpFoundationResponse;
 #[Attribute(Attribute::TARGET_CLASS | Attribute::TARGET_METHOD | Attribute::IS_REPEATABLE)]
 final class ResponseForItem extends Response
 {
-    public function __construct(string $type, array $groups = null)
+    public function __construct(string $type, ?array $groups = null)
     {
         parent::__construct(
             response: HttpFoundationResponse::HTTP_OK,

@@ -30,7 +30,7 @@ final class ResponseService
     {
     }
 
-    public function getResponseForItem(object $data = null, array $groups = []): JsonResponse
+    public function getResponseForItem(?object $data = null, array $groups = []): JsonResponse
     {
         if (null === $data) {
             $error = 'Not found';
@@ -43,14 +43,14 @@ final class ResponseService
         return new JsonResponse(data: $data, json: true);
     }
 
-    public function getResponseForList(array|QueryBuilder $data, MapInterface $map = null, ConfigInterface $config = null, array $groups = []): JsonResponse
+    public function getResponseForList(array|QueryBuilder $data, ?MapInterface $map = null, ?ConfigInterface $config = null, array $groups = []): JsonResponse
     {
         $response = $this->getResponse($data, $map, $config);
 
         return new JsonResponse(data: $this->serializer->serialize($response, 'json', $this->getContext($groups)), json: true);
     }
 
-    private function getResponse(array|QueryBuilder $data, MapInterface $map = null, ConfigInterface $config = null): Response
+    private function getResponse(array|QueryBuilder $data, ?MapInterface $map = null, ?ConfigInterface $config = null): Response
     {
         $pagination = null;
 
