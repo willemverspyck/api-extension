@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Spyck\ApiExtension\Schema;
 
 use Attribute;
-use Nelmio\ApiDocBundle\Annotation\Model;
+use Nelmio\ApiDocBundle\Attribute\Model;
 use OpenApi\Attributes\JsonContent;
 use OpenApi\Attributes\Response;
 use Symfony\Component\HttpFoundation\Response as HttpFoundationResponse;
