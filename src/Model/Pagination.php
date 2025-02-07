@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Spyck\ApiExtension\Model;
 
-use Symfony\Component\Serializer\Annotation as Serializer;
+use Symfony\Component\Serializer\Attribute as Serializer;
 
 final class Pagination
 {

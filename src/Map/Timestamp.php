@@ -4,7 +4,7 @@ namespace Spyck\ApiExtension\Map;
 
 use DateTimeImmutable;
 use OpenApi\Attributes as OpenApi;
-use Symfony\Component\Serializer\Annotation as Serializer;
+use Symfony\Component\Serializer\Attribute as Serializer;
 use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
 use Symfony\Component\Validator\Constraints as Validator;
 

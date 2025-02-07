@@ -23,8 +23,8 @@ use Symfony\Component\Serializer\SerializerInterface;
 
 final class ResponseService
 {
-    private const PREVIOUS = 'previous';
-    private const NEXT = 'next';
+    private const string PREVIOUS = 'previous';
+    private const string NEXT = 'next';
 
     public function __construct(private readonly PaginatorInterface $paginator, private readonly RequestStack $requestStack, private readonly RouterInterface $router, private readonly SerializerInterface $serializer)
     {

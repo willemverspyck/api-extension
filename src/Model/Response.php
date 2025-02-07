@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Spyck\ApiExtension\Model;
 
-use Symfony\Component\Serializer\Annotation as Serializer;
+use Symfony\Component\Serializer\Attribute as Serializer;
 
 final class Response
 {
-    public const GROUP = 'spyck:api:extension';
+    public const string GROUP = 'spyck:api:extension';
 
     #[Serializer\Groups(groups: self::GROUP)]
     private ?ConfigInterface $config = null;
