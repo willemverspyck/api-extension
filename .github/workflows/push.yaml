@@ -17,7 +17,7 @@ jobs:
       - name: Install Composer (Packages)
         run: composer install --prefer-dist
       - name: PHP CS
-        run: ./vendor/bin/phpcs src -v --standard=PSR2
+        run: ./vendor/bin/phpcs
       - name: PHP CS Fixer
         run: ./vendor/bin/php-cs-fixer fix --dry-run --diff
       - name: PHP Unit
