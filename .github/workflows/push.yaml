@@ -1,0 +1,24 @@
+name: Check Code Style and Unit Test
+on: [push]
+jobs:
+  phpunit:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        operating-system: ['ubuntu-latest']
+        php-versions: ['8.1', '8.2', '8.3', '8.4']
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-versions }}
+          tools: composer
+      - name: Install Composer (Packages)
+        run: composer install --prefer-dist
+      - name: PHP CS
+        run: ./vendor/bin/phpcs src -v --standard=PSR2
+      - name: PHP CS Fixer
+        run: ./vendor/bin/php-cs-fixer fix --dry-run --diff
+      - name: PHP Unit
+        run: ./vendor/bin/phpunit --coverage-text --colors
