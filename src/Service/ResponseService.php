@@ -50,6 +50,34 @@ final class ResponseService
         return new JsonResponse(data: $this->serializer->serialize($response, 'json', $this->getContext($groups)), json: true);
     }
 
+    public function getContext(array $groups): array
+    {
+        $groups[] = Response::GROUP;
+
+        return [
+            AbstractNormalizer::GROUPS => $groups,
+            JsonEncode::OPTIONS => JsonResponse::DEFAULT_ENCODING_OPTIONS,
+        ];
+    }
+
+    private function getPage(SlidingPaginationInterface $pagination, string $name): ?string
+    {
+        $data = $pagination->getPaginationData();
+
+        if (array_key_exists($name, $data)) {
+            $request = $this->requestStack->getCurrentRequest();
+
+            $route = $pagination->getRoute();
+
+            $parameters = array_merge($request->query->all(), $request->attributes->get('_route_params'));
+            $parameters['page'] = $data[$name];
+
+            return $this->router->generate($route, $parameters, UrlGeneratorInterface::ABSOLUTE_URL);
+        }
+
+        return null;
+    }
+
     private function getResponse(array|QueryBuilder $data, ?MapInterface $map = null, ?ConfigInterface $config = null): Response
     {
         $response = new Response();
@@ -77,33 +105,5 @@ final class ResponseService
         $response->setTotal(count($data));
 
         return $response;
-    }
-
-    private function getContext(array $groups): array
-    {
-        $groups[] = Response::GROUP;
-
-        return [
-            AbstractNormalizer::GROUPS => $groups,
-            JsonEncode::OPTIONS => JsonResponse::DEFAULT_ENCODING_OPTIONS,
-        ];
-    }
-
-    private function getPage(SlidingPaginationInterface $pagination, string $name): ?string
-    {
-        $data = $pagination->getPaginationData();
-
-        if (array_key_exists($name, $data)) {
-            $request = $this->requestStack->getCurrentRequest();
-
-            $route = $pagination->getRoute();
-
-            $parameters = array_merge($request->query->all(), $request->attributes->get('_route_params'));
-            $parameters['page'] = $data[$name];
-
-            return $this->router->generate($route, $parameters, UrlGeneratorInterface::ABSOLUTE_URL);
-        }
-
-        return null;
     }
 }
