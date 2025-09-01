@@ -79,6 +79,16 @@ final class ResponseService
         return $response;
     }
 
+    private function getContext(array $groups): array
+    {
+        $groups[] = Response::GROUP;
+
+        return [
+            AbstractNormalizer::GROUPS => $groups,
+            JsonEncode::OPTIONS => JsonResponse::DEFAULT_ENCODING_OPTIONS,
+        ];
+    }
+
     private function getPage(SlidingPaginationInterface $pagination, string $name): ?string
     {
         $data = $pagination->getPaginationData();
@@ -95,15 +105,5 @@ final class ResponseService
         }
 
         return null;
-    }
-
-    private function getContext(array $groups): array
-    {
-        $groups[] = Response::GROUP;
-
-        return [
-            AbstractNormalizer::GROUPS => $groups,
-            JsonEncode::OPTIONS => JsonResponse::DEFAULT_ENCODING_OPTIONS,
-        ];
     }
 }
