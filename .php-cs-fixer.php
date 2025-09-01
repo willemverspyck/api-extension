@@ -1,21 +1,19 @@
 <?php
 
+use PhpCsFixer\Config;
+use PhpCsFixer\Finder;
 use PhpCsFixer\Runner\Parallel\ParallelConfigFactory;
 
-$finder = (new PhpCsFixer\Finder())
+$finder = (new Finder())
     ->in([
         sprintf('%s/config', __DIR__),
         sprintf('%s/src', __DIR__),
     ]);
 
-return (new PhpCsFixer\Config())
+return (new Config())
     ->setRules([
         '@Symfony' => true,
-        'array_syntax' => [
-            'syntax' => 'short',
-        ],
         'global_namespace_import' => [
-            'import_classes' => true,
             'import_constants' => true,
             'import_functions' => true,
         ],
