@@ -18,7 +18,7 @@
     "homepage": "https://github.com/willemverspyck/api-extension",
     "type": "library",
     "require": {
-        "php": "^8.1",
+        "php": "^8.2",
         "doctrine/orm": "^2|^3",
         "knplabs/knp-paginator-bundle": "^6",
         "symfony/dependency-injection": "^6|^7",
