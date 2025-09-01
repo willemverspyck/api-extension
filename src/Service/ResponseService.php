@@ -52,7 +52,8 @@ final class ResponseService
 
     private function getResponse(array|QueryBuilder $data, ?MapInterface $map = null, ?ConfigInterface $config = null): Response
     {
-        $pagination = null;
+        $response = new Response();
+        $response->setConfig($config);
 
         if ($map instanceof PaginationMapInterface) {
             $paginate = $this->paginator->paginate($data, $map->getPage(), $map->getPageSize());
@@ -60,15 +61,20 @@ final class ResponseService
             $pagination = new Pagination();
             $pagination->setNext($this->getPage($paginate, self::NEXT));
             $pagination->setPrevious($this->getPage($paginate, self::PREVIOUS));
-        } else {
-            $paginate = $this->paginator->paginate($data);
+
+            $response->setData($paginate->getItems());
+            $response->setTotal($paginate->getTotalItemCount());
+            $response->setPagination($pagination);
+
+            return $response;
         }
 
-        $response = new Response();
-        $response->setConfig($config);
-        $response->setData($paginate->getItems());
-        $response->setTotal($paginate->getTotalItemCount());
-        $response->setPagination($pagination);
+        if ($data instanceof QueryBuilder) {
+            $data = $data->getQuery()->getResult();
+        }
+
+        $response->setData($data);
+        $response->setTotal(count($data));
 
         return $response;
     }
