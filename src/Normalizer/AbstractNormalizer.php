@@ -4,11 +4,9 @@ declare(strict_types=1);
 
 namespace Spyck\ApiExtension\Normalizer;
 
-use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
-use Symfony\Contracts\Service\Attribute\Required;
 
 abstract class AbstractNormalizer implements NormalizerInterface, NormalizerAwareInterface
 {
