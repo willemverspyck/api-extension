@@ -6,7 +6,7 @@ namespace Spyck\ApiExtension\Model;
 
 final class Image
 {
-    public function __construct(private readonly object $object, private readonly ?string $field = null)
+    public function __construct(private readonly object $object, private readonly ?string $field = null, private readonly ?string $filter = null)
     {
     }
 
@@ -18,5 +18,10 @@ final class Image
     public function getField(): ?string
     {
         return $this->field;
+    }
+
+    public function getFilter(): ?string
+    {
+        return $this->filter;
     }
 }

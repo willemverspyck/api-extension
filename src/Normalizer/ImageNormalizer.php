@@ -5,14 +5,16 @@ declare(strict_types=1);
 namespace Spyck\ApiExtension\Normalizer;
 
 use ArrayObject;
+use Liip\ImagineBundle\Service\FilterService;
 use LogicException;
 use Spyck\ApiExtension\Model\Image;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\Serializer\Exception\InvalidArgumentException;
 use Vich\UploaderBundle\Templating\Helper\UploaderHelper;
 
 final class ImageNormalizer extends AbstractNormalizer
 {
-    public function __construct(private readonly ?UploaderHelper $uploaderHelper = null)
+    public function __construct(#[Autowire(service: 'liip_imagine.service.filter')] private ?FilterService $filterService = null, private readonly ?UploaderHelper $uploaderHelper = null)
     {
     }
 
@@ -30,7 +32,17 @@ final class ImageNormalizer extends AbstractNormalizer
             throw new LogicException('VichUploaderBundle is required');
         }
 
-        return $this->uploaderHelper->asset($data->getObject(), $data->getField());
+        $asset = $this->uploaderHelper->asset($data->getObject(), $data->getField());
+
+        if (null === $data->getFilter()) {
+            return $asset;
+        }
+
+        if (null === $this->filterService) {
+            throw new LogicException('LiipImagineBundle is required');
+        }
+
+        return $this->filterService->getUrlOfFilteredImage(path: $asset, filter: $data->getFilter(), webpSupported: true);
     }
 
     public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
