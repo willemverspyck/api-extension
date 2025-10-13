@@ -34,6 +34,10 @@ final class ImageNormalizer extends AbstractNormalizer
 
         $asset = $this->uploaderHelper->asset($data->getObject(), $data->getField());
 
+        if (null === $asset) {
+            return null;
+        }
+
         if (null === $data->getFilter()) {
             return $asset;
         }
