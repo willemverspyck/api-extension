@@ -16,7 +16,9 @@ final class KindNormalizer extends AbstractNormalizer
 
         $normalize = $this->normalizer->normalize($data, $format, $context);
 
-        $kind = new ReflectionClass(get_class($data))->getShortName();
+        $reflectionClass = new ReflectionClass(get_class($data));
+
+        $kind = $reflectionClass->getShortName();
 
         return [
             'kind' => strtolower($kind),
