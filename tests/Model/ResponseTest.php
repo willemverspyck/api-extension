@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Spyck\ApiExtension\Tests\Model;
 
 use PHPUnit\Framework\TestCase;
-use Spyck\ApiExtension\Model\Response;
 use Spyck\ApiExtension\Model\ConfigInterface;
 use Spyck\ApiExtension\Model\Pagination;
+use Spyck\ApiExtension\Model\Response;
 
 final class ResponseTest extends TestCase
 {
