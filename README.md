@@ -3,7 +3,7 @@
 Extension for API. 
 
 ## Requirements
-PHP ^8.3
+PHP ^8.4
 
 ## Installation
 Install it using [Composer](https://getcomposer.org/):
