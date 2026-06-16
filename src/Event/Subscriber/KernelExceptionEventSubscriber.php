@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Spyck\ApiExtension\Event\Subscriber;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
