@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Spyck\ApiExtension\Service;
 
 use Doctrine\ORM\QueryBuilder;
+use FOS\ElasticaBundle\Paginator\PaginatorAdapterInterface;
 use Knp\Bundle\PaginatorBundle\Pagination\SlidingPaginationInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Spyck\ApiExtension\Map\MapInterface;
@@ -30,7 +31,7 @@ final class ResponseService
     {
     }
 
-    public function getResponseForItem(?object $data = null, array $groups = []): JsonResponse
+    public function getResponseForItem(array|object|null $data = null, array $groups = []): JsonResponse
     {
         if (null === $data) {
             $error = 'Not found';
@@ -43,7 +44,7 @@ final class ResponseService
         return new JsonResponse(data: $data, json: true);
     }
 
-    public function getResponseForList(array|QueryBuilder $data, ?MapInterface $map = null, ?ConfigInterface $config = null, array $groups = []): JsonResponse
+    public function getResponseForList(array|QueryBuilder|PaginatorAdapterInterface $data, ?MapInterface $map = null, ?ConfigInterface $config = null, array $groups = []): JsonResponse
     {
         $response = $this->getResponse($data, $map, $config);
 
@@ -78,31 +79,25 @@ final class ResponseService
         return null;
     }
 
-    private function getResponse(array|QueryBuilder $data, ?MapInterface $map = null, ?ConfigInterface $config = null): Response
+    private function getResponse(array|QueryBuilder|PaginatorAdapterInterface $data, ?MapInterface $map = null, ?ConfigInterface $config = null): Response
     {
-        $response = new Response();
-        $response->setConfig($config);
-
         if ($map instanceof PaginationMapInterface) {
             $paginate = $this->paginator->paginate($data, $map->getPage(), $map->getPageSize());
 
             $pagination = new Pagination();
             $pagination->setNext($this->getPage($paginate, self::NEXT));
             $pagination->setPrevious($this->getPage($paginate, self::PREVIOUS));
+        } else {
+            $paginate = $this->paginator->paginate($data);
 
-            $response->setData($paginate->getItems());
-            $response->setTotal($paginate->getTotalItemCount());
-            $response->setPagination($pagination);
-
-            return $response;
+            $pagination = null;
         }
 
-        if ($data instanceof QueryBuilder) {
-            $data = $data->getQuery()->getResult();
-        }
-
-        $response->setData($data);
-        $response->setTotal(count($data));
+        $response = new Response();
+        $response->setConfig($config);
+        $response->setData($paginate->getItems());
+        $response->setPagination($pagination);
+        $response->setTotal($paginate->getTotalItemCount());
 
         return $response;
     }

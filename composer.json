@@ -19,7 +19,6 @@
     "type": "library",
     "require": {
         "php": "^8.4",
-        "doctrine/orm": "^3",
         "knplabs/knp-paginator-bundle": "^6",
         "symfony/dependency-injection": "^7|^8",
         "symfony/http-foundation": "^7|^8",
@@ -31,7 +30,9 @@
     },
     "require-dev": {
         "escapestudios/symfony2-coding-standard": "^3",
+        "doctrine/orm": "^3",
         "friendsofphp/php-cs-fixer": "^3",
+        "friendsofsymfony/elastica-bundle": "^7",
         "liip/imagine-bundle": "^2",
         "phpunit/phpunit": "^12",
         "squizlabs/php_codesniffer": "^4",
