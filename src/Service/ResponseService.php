@@ -65,18 +65,18 @@ final class ResponseService
     {
         $data = $pagination->getPaginationData();
 
-        if (array_key_exists($name, $data)) {
-            $request = $this->requestStack->getCurrentRequest();
-
-            $route = $pagination->getRoute();
-
-            $parameters = array_merge($request->query->all(), $request->attributes->get('_route_params'));
-            $parameters['page'] = $data[$name];
-
-            return $this->router->generate($route, $parameters, UrlGeneratorInterface::ABSOLUTE_URL);
+        if (false === array_key_exists($name, $data)) {
+            return null;
         }
 
-        return null;
+        $request = $this->requestStack->getCurrentRequest();
+
+        $route = $pagination->getRoute();
+
+        $parameters = array_merge($request->query->all(), $request->attributes->get('_route_params'));
+        $parameters['page'] = $data[$name];
+
+        return $this->router->generate($route, $parameters, UrlGeneratorInterface::ABSOLUTE_URL);
     }
 
     private function getResponse(array|QueryBuilder|PaginatorAdapterInterface $data, ?MapInterface $map = null, ?ConfigInterface $config = null): Response
@@ -84,21 +84,23 @@ final class ResponseService
         if ($map instanceof PaginationMapInterface) {
             $paginate = $this->paginator->paginate($data, $map->getPage(), $map->getPageSize());
 
-            $pagination = new Pagination();
-            $pagination->setNext($this->getPage($paginate, self::NEXT));
-            $pagination->setPrevious($this->getPage($paginate, self::PREVIOUS));
-        } else {
-            $paginate = $this->paginator->paginate($data);
+            $pagination = new Pagination()
+                ->setNext($this->getPage($paginate, self::NEXT))
+                ->setPrevious($this->getPage($paginate, self::PREVIOUS));
 
-            $pagination = null;
+            return new Response()
+                ->setConfig($config)
+                ->setData($paginate->getItems())
+                ->setPagination($pagination)
+                ->setTotal($paginate->getTotalItemCount());
         }
 
-        $response = new Response();
-        $response->setConfig($config);
-        $response->setData($paginate->getItems());
-        $response->setPagination($pagination);
-        $response->setTotal($paginate->getTotalItemCount());
+        if ($data instanceof PaginatorAdapterInterface) {
+            throw new Exception('ElasticSearch only supports pagination');
+        }
 
-        return $response;
+        return new Response()
+            ->setConfig($config)
+            ->setData($data instanceof QueryBuilder ? $data->getQuery()->getResult() : $data);
     }
 }
