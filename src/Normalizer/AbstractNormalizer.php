@@ -12,24 +12,28 @@ abstract class AbstractNormalizer implements NormalizerInterface, NormalizerAwar
 {
     use NormalizerAwareTrait;
 
-    private array $normalized = [];
-
-    protected function isNormalized(mixed $data): bool
+    protected function isNormalize(mixed $data, ?string $format = null, array $context = []): bool
     {
-        if (false === is_object($data)) {
+        if (false === array_key_exists(self::class, $context)) {
             return false;
         }
 
-        return in_array($this->getKey($data), $this->normalized, true);
+        return in_array($this->getKey($data), $context[self::class], true);
     }
 
-    protected function setNormalized(mixed $data): void
+    protected function getNormalize(mixed $data, ?string $format = null, array $context = []): array
     {
-        $this->normalized[] = $this->getKey($data);
+        if (false === array_key_exists(self::class, $context)) {
+            $context[self::class] = [];
+        }
+
+        $context[self::class][] = $this->getKey($data);
+
+        return $this->normalizer->normalize($data, $format, $context);
     }
 
-    protected function getKey(object $object): string
+    private function getKey(mixed $data): string
     {
-        return sprintf('%s_%s', spl_object_hash($this), spl_object_hash($object));
+        return spl_object_hash($data);
     }
 }

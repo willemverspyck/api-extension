@@ -12,9 +12,7 @@ final class KindNormalizer extends AbstractNormalizer
 {
     public function normalize(mixed $data, ?string $format = null, array $context = []): array|string|int|float|bool|ArrayObject|null
     {
-        $this->setNormalized($data);
-
-        $normalize = $this->normalizer->normalize($data, $format, $context);
+        $normalize = $this->getNormalize($data, $format, $context);
 
         $kind = new ReflectionClass(get_class($data))->getShortName();
 
@@ -26,7 +24,7 @@ final class KindNormalizer extends AbstractNormalizer
 
     public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
     {
-        if ($this->isNormalized($data)) {
+        if ($this->isNormalize($data, $format, $context)) {
             return false;
         }
 
