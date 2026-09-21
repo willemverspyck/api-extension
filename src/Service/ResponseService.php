@@ -16,7 +16,6 @@ use Spyck\ApiExtension\Model\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response as HttpFoundationResponse;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Serializer\Encoder\JsonEncode;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
@@ -76,7 +75,7 @@ final class ResponseService
         $parameters = array_merge($request->query->all(), $request->attributes->get('_route_params'));
         $parameters['page'] = $data[$name];
 
-        return $this->router->generate($route, $parameters, UrlGeneratorInterface::ABSOLUTE_URL);
+        return $this->router->generate($route, $parameters);
     }
 
     private function getResponse(array|QueryBuilder|PaginatorAdapterInterface $data, ?MapInterface $map = null, ?ConfigInterface $config = null): Response
