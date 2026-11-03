@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Spyck\ApiExtension\Schema;
 
 use Attribute;
-use OpenApi\Attributes\Response;
+use OpenApi\Spec\Response;
 use Symfony\Component\HttpFoundation\Response as HttpFoundationResponse;
 
 #[Attribute(Attribute::TARGET_CLASS | Attribute::TARGET_METHOD | Attribute::IS_REPEATABLE)]
